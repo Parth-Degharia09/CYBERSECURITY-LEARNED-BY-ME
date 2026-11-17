@@ -1,55 +1,182 @@
-Level 5-6
+Day 02 – OverTheWire Bandit (Level 5–10)
 
-task:-The password for the next level is stored in a file somewhere under the inhere directory and has all of the following properties:
-human-readable,1033 bytes in size ,not executable
-  
-step3 - ls 
-step4 - cd inhere
-step5 - find . -type f -size 1033c ! -executable
-step6 - file filename
-step7 - cat filename
+Level 5–6
 
-problem i faced :- The find command gave me somewhat problem bcuz of its somewhat wide variety of use after figuring it out for reference i tried grep first bt it gave me bunch of file that have same value so than i used [find] command [.] means  current directory [- type f]
-is used to only specifically choose files [-size 1033c] it used to find a size of file c=bytes and [! -executable] (!)means not and all of it together means not executable
+Task
 
+The password for the next level is stored in a file somewhere under the "inhere" directory and has all of the following properties:
 
-Level 6-7
+- Human-readable
+- 1033 bytes in size
+- Not executable
 
-task:- The password for the next level is stored somewhere on the server and has all of the following properties: owned by user bandit7
-owned by group bandit6 ,33 bytes in size
+Steps Performed
 
-step3 - ls -la
-step4 - find . -user bandit7 -group bandit6  -size 33c 
-step5 - find . -user bandit7 -group bandit6 -size 33c 2</dev/null
-step6 - cat filename 
+1. Listed the files and directories:
+   
+   ls
 
-problem i faced :- the first find that i gave had many permission denied but it had the answer that just took some time to find so i researched about how it doesn't show things that didn't show result more like a filter so [2</dev/null] that hides permission errors
+2. Entered the "inhere" directory:
+   
+   cd inhere
 
-Level 7-8 
+3. Used the "find" command to locate the required file:
+   
+   find . -type f -size 1033c ! -executable
 
-task:- he password for the next level is stored in the file data.txt next to the word millionth
+4. Checked the file type:
+   
+   file filename
 
-step3 - ls -la
-step4 - grep millionth data.txt
+5. Displayed the file contents to retrieve the password:
+   
+   cat filename
 
+Problem Faced
 
-problem i faced:- like a beginner i cat the whole file it dumped the whole file in my terminal so i had to reset my terminal and it was a mistake after that i used grep command 
+The "find" command initially gave me some difficulty because of its wide variety of uses. I first tried using "grep", but it returned multiple files with similar values. After figuring it out, I used the "find" command successfully.
 
-Level 8-9
+- "." – Represents the current directory.
+- "-type f" – Searches only for regular files.
+- "-size 1033c" – Searches for files that are exactly 1033 bytes ("c" represents bytes).
+- "! -executable" – Excludes executable files ("!" means NOT).
 
-task:- The password for the next level is stored in the file data.txt and is the only line of text that occurs only once
+Combining these conditions helped me locate the required file.
 
-step3 - ls -la 
-step4 - sort data.txt | uniq -u
+---
 
-problem i faced :- at first i used uniq -u data.txt but it dumped the whole file again because it only adjacent duplicates after that i used [sort] to sort out the file [|] means pipeline and [-u] is used for line that appear only once
+Level 6–7
 
-Level 9-10
+Task
 
-task:- The password for the next level is stored in the file data.txt in one of the few human-readable strings, preceded by several ‘=’ characters.
+The password for the next level is stored somewhere on the server and has the following properties:
 
-step3 - ls -la
-step4 - strings data.txt
-step4 - strings data.txt | grep '='
+- Owned by user "bandit7".
+- Owned by group "bandit6".
+- 33 bytes in size.
 
-problem i faced :- the first string i used did printed everything and i can stil did found my password in that but than i used grep to make it better 
+Steps Performed
+
+1. Listed all files, including hidden files:
+   
+   ls -la
+
+2. Searched for the file using its ownership and size:
+   
+   find . -user bandit7 -group bandit6 -size 33c
+
+3. Used the following command to hide permission errors:
+   
+   find . -user bandit7 -group bandit6 -size 33c 2>/dev/null
+
+4. Displayed the contents of the identified file:
+   
+   cat filename
+
+Problem Faced
+
+The first "find" command displayed many permission-denied errors. However, it also contained the required answer, which took some time to locate.
+
+After researching, I learned how to redirect error messages using "2>/dev/null".
+
+- "2" – Represents standard error (stderr).
+- ">" – Redirects the output.
+- "/dev/null" – Discards the redirected output.
+
+This helped hide permission errors and made the result easier to read.
+
+---
+
+Level 7–8
+
+Task
+
+The password for the next level is stored in the file "data.txt", next to the word "millionth".
+
+Steps Performed
+
+1. Listed the files:
+   
+   ls -la
+
+2. Used "grep" to search for the word "millionth":
+   
+   grep millionth data.txt
+
+Problem Faced
+
+As a beginner, I initially used the "cat" command to display the entire file. It dumped a huge amount of text into my terminal, making it difficult to find the required information.
+
+I had to reset my terminal. After that, I used the "grep" command, which helped me search directly for the word "millionth" instead of displaying the entire file.
+
+---
+
+Level 8–9
+
+Task
+
+The password for the next level is stored in the file "data.txt" and is the only line of text that occurs only once.
+
+Steps Performed
+
+1. Listed the files:
+   
+   ls -la
+
+2. Sorted the lines and filtered out the unique line:
+   
+   sort data.txt | uniq -u
+
+Problem Faced
+
+Initially, I used "uniq -u data.txt", but it did not give me the expected result because the "uniq" command only detects adjacent duplicate lines.
+
+After that, I learned to use the "sort" command before "uniq".
+
+- "sort" – Sorts the lines of a file.
+- "|" – Pipeline operator, which passes the output of one command to another.
+- "uniq -u" – Displays only lines that occur exactly once.
+
+Combining both commands helped me find the required password.
+
+---
+
+Level 9–10
+
+Task
+
+The password for the next level is stored in the file "data.txt" in one of the few human-readable strings, preceded by several "=" characters.
+
+Steps Performed
+
+1. Listed the files:
+   
+   ls -la
+
+2. Used the "strings" command to extract human-readable strings:
+   
+   strings data.txt
+
+3. Used "grep" to filter strings containing the "=" character:
+   
+   strings data.txt | grep '='
+
+Problem Faced
+
+Initially, I used the "strings" command, which printed many human-readable strings from the file. Although I could still find the password in the output, it was difficult to identify the required information.
+
+After that, I combined "strings" with "grep" to filter the output and make the search easier.
+
+- "strings" – Extracts printable human-readable strings from a file.
+- "grep '='" – Searches for lines containing the "=" character.
+- "|" – Passes the output of "strings" to "grep".
+
+This made finding the password much easier.
+
+---
+
+Overall Learning
+
+During Day 02, I learned how to search for files based on specific conditions, filter error messages, search for particular words, identify unique lines, and extract human-readable strings.
+
+I also gained practical experience with commands such as "find", "grep", "sort", "uniq", and "strings", along with understanding how to combine commands using pipes and redirection
