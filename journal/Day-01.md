@@ -9,7 +9,7 @@ Platform: [OverTheWire Bandit](https://overthewire.org/wargames/bandit/bandit1.h
 **Steps:**
 1. `ssh bandit0@bandit.labs.overthewire.org -p 2220`
 2. Enter password: `bandit0`
-3. `ls`
+3. `ls` 
 4. `cat readme`
 
 **Problem faced:** None ✅
