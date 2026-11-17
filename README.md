@@ -39,7 +39,7 @@ Whether you're a fellow beginner reading along or an experienced practitioner ch
 ---
 
 ## 📚 Helpful Resources I'm Using
-* *Add links to courses, YouTube channels, or books you're following here*
+professor messer network+ playlist https://www.youtube.com/watch?v=owDh6FNJUog&list=PLG49S3nxzAnlCJiCrOYuRYb6cne864a7G&index=2 
 
 ---
 
