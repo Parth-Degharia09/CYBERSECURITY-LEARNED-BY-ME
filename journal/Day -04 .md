@@ -1,69 +1,263 @@
-Level 13-14
+Day 04 – OverTheWire Bandit (Level 13–18)
 
-task:- The password for the next level is stored in /etc/bandit_pass/bandit14 and can only be read by user bandit14. For this level, you don’t get the next password, but you get a private SSH key that can be used to log into the next level. Look at the commands that logged you into previous bandit levels, and find out how to use the key for this level.
-If you need help with this level: a hint file can be found in the home directory.
-Make sure to read the error messages as they are informative.
+Level 13–14
 
-step3 - ls -la 
-step4 - cat sshkey.private
-step5 - pwd 
-step6 - exit 
-step7 - scp -p 2200 bandit13@bandit.labs.overwire.org /home/bandit13/sshkey.private .
-step8 - paste the password of 13 
-step9 - chmod 600 sshkey.private
-step10 - ssh -i sshkey.private bandit14@bandit.labs.overwire.org -p 2200
-step11 - cat /etc/bandit_pass/bandit14
+Task
 
-problem i faced:- the scp was new to me so i panicked quite a bit i will explain what and whata re use of step7 [scp] command [-p 2200] port [bandit13@bandit.labs.overwire.org]user name [/home/bandit13] directory name and address [/sshkey.private]file or key name [chmod 600]means change the file permission to read and write only b owner which is me [-ssh -i] the i is for for identify it is specifically used for private key to login without password 
+The password for the next level is stored in "/etc/bandit_pass/bandit14" and can only be read by user "bandit14".
 
-Level 14-15
+For this level, instead of receiving the next password, we are provided with a private SSH key that can be used to log in to the next level.
 
-task:- The password for the next level can be retrieved by submitting the password of the current level to port 30000 on localhost.
+Steps Performed
 
-step3 - ls -la
-step4 - nc localhost 30000 [paste the current password]
+1. Listed all files, including hidden files:
+   
+   ls -la
 
-problem i faced:- first i learn about  The  nc  (or  netcat) utility is used for just about anything under the sun involving TCP, UDP
-it scans the ports 
+2. Displayed the private SSH key:
+   
+   cat sshkey.private
 
-Level 15-16
- 
-task:- The password for the next level can be retrieved by submitting the password of the current level to port 30001 on localhost using SSL/TLS encryption.
+3. Checked the current working directory:
+   
+   pwd
 
-step3 :- ls -la
-step4:- openssl s_client -connect localhost:30001 [paste the previous password]
+4. Exited the remote Bandit server:
+   
+   exit
 
-problem i faced:- i am fairly new to Linux i dont know most commands but i am learning them bit by bit so after researching about openssl i knew what to do in this i will explain what happened in step4 first [openssl] it is a command [s_client]that means to treat it as a client [-connect localhost:30001]it means to connect to localhost of port30001 after that paste the password let just say it  took few tries for me to get it right 
+5. From my local machine, copied the private SSH key using "scp":
+   
+   scp -P 2220 bandit13@bandit.labs.overthewire.org:/home/bandit13/sshkey.private .
 
-Level 16-17
+6. Entered the password for Bandit 13 when prompted.
 
-task:- The credentials for the next level can be retrieved by submitting the password of the current level to a port on localhost in the range 31000 to 32000. First find out which of these ports have a server listening on them. Then find out which of those speak SSL/TLS and which don’t. There is only 1 server that will give the next credentials, the others will simply send back to you whatever you send to it.
+7. Changed the permissions of the private key:
+   
+   chmod 600 sshkey.private
 
-Helpful note: Getting “DONE”, “RENEGOTIATING” or “KEYUPDATE”? Read the “CONNECTED COMMANDS” section in the manpage.
+8. Used the private SSH key to log in as Bandit 14:
+   
+   ssh -i sshkey.private -p 2220 bandit14@bandit.labs.overthewire.org
 
-step3 - ls -la
-step4 - nmap -p31000-3200 localhost
-step5 - nc local <port> [many of them just echo back whatever you send ones that don't will be your port]
-step6 - openssl s_client -connect localhost:<port>
-step7 - cat /etc/bandit_pass/bandit16 | openssl s_client -connect localhost:<port> -quiet[this will give you an sshkey.private]
-step8 - exit
-step9:- [there are two ways to do it with scp or copy paste  will use copy paste cuz its easy copy the sshkey.private to your private file ]
-step10 - touch sshkey,private
-step11 - nano sshkey,private [ctrls=save ctrlx=exit][note:- i use ubuntu in wsl so your could be different]
-step12:- chmod 600 sshkey.private
-step13:- ssh -i sshkey.private bandit17@bandit.labs.overwire.org -p 2200
+9. Retrieved the password:
+   
+   cat /etc/bandit_pass/bandit14
 
-problem i faced :- is with ssh key some online blogs says you can login from inside bandit16 to bandit 17 that was false for my case but could be true for your case for my case specially i have to copy the ssh key my device to use chmod cause whatever i did bandit did not let me use chmod cause of permission issue i took me 20 min to figure it out so yeah i faced quite trouble on this level 
+Problem Faced
 
+The "scp" command was completely new to me, so I initially panicked because I was unfamiliar with its syntax and usage.
 
-level 17-18 
+After researching, I understood the different parts of the command:
 
-task:- There are 2 files in the homedirectory: passwords.old and passwords.new. The password for the next level is in passwords.new and is the only line that has been changed between passwords.old and passwords.new
+- "scp" – Securely copies files between local and remote systems.
+- "-P 2220" – Specifies the SSH port. Here, "-P" is uppercase.
+- "bandit13@bandit.labs.overthewire.org" – Specifies the remote username and server.
+- "/home/bandit13/sshkey.private" – Specifies the location and name of the private key on the remote server.
+- "." – Copies the file into the current local directory.
+- "chmod 600" – Gives the file owner read and write permissions while removing permissions for other users.
+- "ssh -i" – Uses the specified private key for authentication instead of entering a password.
 
-NOTE: if you have solved this level and see ‘Byebye!’ when trying to log into bandit18, this is related to the next level, bandit19
+After understanding these commands, I successfully logged in to Bandit 14 using the private SSH key.
 
-step3 - ls-la
-step4 - cat passwords.new 
-step5 - diff passwords.old password.new
+---
 
-problem i faced :- frankly i did face any issue just learn diff command 
+Level 14–15
+
+Task
+
+The password for the next level can be retrieved by submitting the password of the current level to port "30000" on localhost.
+
+Steps Performed
+
+1. Listed the files:
+   
+   ls -la
+
+2. Connected to port 30000 using Netcat:
+   
+   nc localhost 30000
+
+3. Pasted the current level's password into the connection.
+
+4. Received the password for the next level.
+
+Problem Faced
+
+Initially, I was unfamiliar with the "nc" command. After researching, I learned that Netcat (or "nc") is a networking utility used for communicating over TCP and UDP connections.
+
+I also learned that it can be used to connect to specific ports and exchange data with services running on those ports.
+
+- "nc" – Netcat networking utility.
+- "localhost" – Refers to the current machine.
+- "30000" – The port to which the connection is established.
+
+After understanding how Netcat works, I submitted the current password and retrieved the next one.
+
+---
+
+Level 15–16
+
+Task
+
+The password for the next level can be retrieved by submitting the password of the current level to port "30001" on localhost using SSL/TLS encryption.
+
+Steps Performed
+
+1. Listed the files:
+   
+   ls -la
+
+2. Established an SSL/TLS connection using OpenSSL:
+   
+   openssl s_client -connect localhost:30001
+
+3. Pasted the previous level's password into the connection.
+
+4. Received the password for the next level.
+
+Problem Faced
+
+Since I am still fairly new to Linux and learning commands bit by bit, I was unfamiliar with OpenSSL.
+
+After researching, I understood the purpose of the command:
+
+- "openssl" – A command-line tool used for cryptographic operations.
+- "s_client" – Starts an SSL/TLS client connection.
+- "-connect localhost:30001" – Connects to port 30001 on the local machine.
+
+It took me a few attempts to get everything right, but after understanding how the connection worked, I successfully retrieved the password.
+
+---
+
+Level 16–17
+
+Task
+
+The credentials for the next level can be retrieved by submitting the password of the current level to a port on localhost in the range "31000" to "32000".
+
+First, we need to identify which ports have a server listening on them. Then, we need to determine which servers support SSL/TLS encryption.
+
+Only one server will provide the next credentials, while the others will simply return whatever data we send to them.
+
+Steps Performed
+
+1. Listed the files:
+   
+   ls -la
+
+2. Scanned the specified port range using Nmap:
+   
+   nmap -p 31000-32000 localhost
+
+3. Tested the available ports using Netcat:
+   
+   nc localhost <port>
+   
+   Many ports simply returned the same data that I sent. I identified the ports that behaved differently for further testing.
+
+4. Tested the candidate ports for SSL/TLS support:
+   
+   openssl s_client -connect localhost:<port>
+
+5. Submitted the current level's password to the correct SSL/TLS service:
+   
+   cat /etc/bandit_pass/bandit16 | openssl s_client -connect localhost:<port> -quiet
+
+6. Received the private SSH key for Bandit 17.
+
+7. Exited the connection:
+   
+   exit
+
+8. Copied the private SSH key from the terminal output and saved it on my local machine.
+
+9. Created a file to store the private key:
+   
+   touch sshkey.private
+
+10. Opened the file using Nano:
+    
+    nano sshkey.private
+
+11. Pasted the private SSH key into the file.
+
+12. Saved and exited Nano:
+    
+    - "Ctrl + O" – Save the file.
+    - "Enter" – Confirm the filename.
+    - "Ctrl + X" – Exit Nano.
+
+13. Changed the private key permissions:
+    
+    chmod 600 sshkey.private
+
+14. Logged in to Bandit 17 using the private SSH key:
+    
+    ssh -i sshkey.private -p 2220 bandit17@bandit.labs.overthewire.org
+
+Problem Faced
+
+The biggest difficulty I faced in this level was handling the SSH private key.
+
+Some online tutorials suggested that I could log in directly from inside Bandit 16 to Bandit 17. However, that approach did not work in my case.
+
+I had to copy the private SSH key to my local machine so that I could change its permissions using "chmod".
+
+The Bandit environment did not allow me to change the permissions as I expected because of permission restrictions.
+
+It took me around 20 minutes to figure out the issue.
+
+Eventually, I understood that I could save the private key locally, change its permissions, and use it to authenticate with SSH.
+
+This level taught me the importance of understanding SSH authentication and file permissions.
+
+---
+
+Level 17–18
+
+Task
+
+There are two files in the home directory: "passwords.old" and "passwords.new".
+
+The password for the next level is stored in "passwords.new" and is the only line that has changed between "passwords.old" and "passwords.new".
+
+Steps Performed
+
+1. Listed all files:
+   
+   ls -la
+
+2. Initially displayed the contents of the new password file:
+   
+   cat passwords.new
+
+3. Compared both files to identify the changed line:
+   
+   diff passwords.old passwords.new
+
+4. Identified the changed line, which contained the password for the next level.
+
+Problem Faced
+
+Honestly, I did not face any major difficulties in this level.
+
+The main thing I learned was the "diff" command, which I had not used before.
+
+- "diff" – Compares two files line by line and displays the differences.
+- "passwords.old" – The older version of the file.
+- "passwords.new" – The updated version of the file.
+
+Using "diff" made it much easier to identify the single changed line instead of manually comparing both files.
+
+---
+
+Overall Learning
+
+During Day 04, I learned about SSH private key authentication, secure file transfers, networking utilities, SSL/TLS connections, port scanning, and file comparison.
+
+I gained practical experience with commands such as "scp", "chmod", "ssh", "nc", "openssl", "nmap", "nano", and "diff".
+
+The most challenging level was Level 16–17 because of the SSH private key and permission-related issues. However, solving it helped me understand how authentication works and how to troubleshoot Linux permission problems.
+
+This day also improved my understanding of networking and secure communication.
